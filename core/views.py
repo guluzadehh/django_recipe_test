@@ -50,7 +50,11 @@ class ShowRecipesWithoutProduct(ListView):
     def get_queryset(self):
         product_id = self.request.GET.get("product_id")
         return Recipe.objects.filter(
-            ~Q(recipeproduct__product_id=product_id) | Q(recipeproduct__weight__lt=10)
+            ~Q(recipeproduct__product_id=product_id)
+            | Q(
+                Q(recipeproduct__product_id=product_id)
+                & Q(recipeproduct__weight__lt=10)
+            )
         ).distinct()
 
     def get(self, request: HttpRequest, *args, **kwargs):
